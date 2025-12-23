@@ -9,7 +9,6 @@ interface ServicesModalProps {
 export function ServicesModal({ isOpen, onClose }: ServicesModalProps) {
   const { services, addService, deleteService } = useServices();
 
-  // Estado do formulário
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [duration, setDuration] = useState("30");
@@ -22,7 +21,6 @@ export function ServicesModal({ isOpen, onClose }: ServicesModalProps) {
 
     addService(name, Number(price), Number(duration));
 
-    // Limpar form
     setName("");
     setPrice("");
     setDuration("30");
@@ -44,8 +42,6 @@ export function ServicesModal({ isOpen, onClose }: ServicesModalProps) {
             Adicione ou remova serviços e preços.
           </p>
         </div>
-
-        {/* Lista de Serviços Existentes */}
         <div className="flex-1 overflow-y-auto p-6 space-y-3 custom-scrollbar">
           {services.length === 0 ? (
             <p className="text-center text-slate-400 text-sm">
@@ -88,8 +84,6 @@ export function ServicesModal({ isOpen, onClose }: ServicesModalProps) {
             ))
           )}
         </div>
-
-        {/* Formulário de Adição */}
         <div className="p-6 bg-slate-50 border-t border-slate-100">
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
             Adicionar Novo

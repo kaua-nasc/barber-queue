@@ -167,15 +167,14 @@ export default function Admin() {
           isOpen={isFinishModalOpen}
           onClose={() => setIsFinishModalOpen(false)}
           clientName={currentClient.name}
-          initialServices={currentClient.services} // Passa o que ele escolheu na fila
-          allServices={services} // Passa o catálogo para adicionar extras
+          initialServices={currentClient.services}
+          allServices={services}
           onConfirm={onConfirmFinish}
         />
       )}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-6 border-b border-slate-200 gap-4">
         <div className="flex items-center gap-4 group">
-          {/* Lógica da Logo: Se tiver URL mostra Imagem, se não mostra Ícone */}
-          <div className="bg-white text-slate-800 p-3 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-slate-100 relative overflow-hidden w-14 h-14 flex items-center justify-center">
+          <div className="bg-white text-slate-800 p-1 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-slate-100 relative overflow-hidden w-20 h-20 flex items-center justify-center">
             {settings?.logoUrl ? (
               <img
                 src={settings.logoUrl}
@@ -193,7 +192,6 @@ export default function Admin() {
                 {settings?.barbershopName}
               </h1>
 
-              {/* Botão de Editar (Pequeno lápis) */}
               <button
                 onClick={() => setIsSettingsOpen(true)}
                 className="p-1.5 text-slate-300 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all"
@@ -208,7 +206,6 @@ export default function Admin() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          {/* Toggle Button */}
           <button
             onClick={() => setIsServicesOpen(true)}
             className="text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:underline flex items-center gap-1 mt-1"
@@ -307,7 +304,7 @@ export default function Admin() {
 
               <div className="mt-12 relative z-10">
                 <button
-                  onClick={() => setIsFinishModalOpen(true)} // <--- ALTERADO: Só abre o modal
+                  onClick={() => setIsFinishModalOpen(true)}
                   className="w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-lg rounded-2xl shadow-xl shadow-emerald-600/20 hover:shadow-emerald-600/30 hover:-translate-y-1 active:translate-y-0 transition-all flex items-center justify-center gap-3"
                 >
                   <svg

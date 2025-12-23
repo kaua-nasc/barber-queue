@@ -6,8 +6,8 @@ interface FinishModalProps {
   isOpen: boolean;
   onClose: () => void;
   clientName: string;
-  initialServices: string[]; // O que ele pediu na fila
-  allServices: ServiceItem[]; // Todo o catálogo para adicionar extras
+  initialServices: string[];
+  allServices: ServiceItem[];
   onConfirm: (finalServices: string[]) => void;
 }
 
@@ -21,7 +21,6 @@ export function FinishModal({
 }: FinishModalProps) {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  // Carrega os serviços iniciais quando o modal abre
   useEffect(() => {
     if (isOpen) {
       setSelectedServices(initialServices);
@@ -38,7 +37,6 @@ export function FinishModal({
     }
   };
 
-  // Cálculo do Total em Tempo Real
   const total = selectedServices.reduce((acc, name) => {
     const item = allServices.find((s) => s.name === name);
     return acc + (item?.price || 0);

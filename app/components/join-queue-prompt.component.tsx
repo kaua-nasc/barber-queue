@@ -16,11 +16,9 @@ export function JoinQueuePrompt({
 }: JoinQueuePromptProps) {
   const [name, setName] = useState("");
 
-  // Armazenamos o objeto inteiro para poder somar o preço facilmente
   const [selectedServices, setSelectedServices] = useState<ServiceItem[]>([]);
 
   const toggleService = (service: ServiceItem) => {
-    // Verifica se já está na lista comparando o ID
     const isAlreadySelected = selectedServices.some((s) => s.id === service.id);
 
     if (isAlreadySelected) {
@@ -32,7 +30,6 @@ export function JoinQueuePrompt({
 
   const handleConfirm = () => {
     if (name.trim() && selectedServices.length > 0) {
-      // Passa apenas os nomes conforme sua interface original pede
       onJoin(
         name,
         selectedServices.map((s) => s.name)
@@ -40,7 +37,6 @@ export function JoinQueuePrompt({
     }
   };
 
-  // Calcula o total
   const totalPrice = selectedServices.reduce(
     (acc, curr) => acc + curr.price,
     0
@@ -50,7 +46,6 @@ export function JoinQueuePrompt({
 
   return (
     <div className="flex flex-col items-center justify-center h-full text-center p-6 md:p-8 overflow-y-auto custom-scrollbar relative">
-      {/* Ícone de Topo */}
       <div className="mb-6 p-4 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100">
         <ScissorIcon className="w-8 h-8 text-slate-700" />
       </div>
@@ -61,8 +56,6 @@ export function JoinQueuePrompt({
       <p className="text-slate-400 max-w-xs mx-auto mb-8 text-sm font-medium">
         Informe seu nome e escolha os serviços.
       </p>
-
-      {/* Input de Nome */}
       <div className="w-full max-w-sm mb-6 text-left">
         <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
           Seu Nome
@@ -82,8 +75,6 @@ export function JoinQueuePrompt({
           )}
         </div>
       </div>
-
-      {/* Seleção de Serviços */}
       <div className="w-full max-w-sm mb-8 text-left">
         <div className="flex justify-between items-end mb-3 ml-1">
           <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -130,7 +121,6 @@ export function JoinQueuePrompt({
                     R$ {service.price}
                   </span>
 
-                  {/* Indicador de Seleção (Check) */}
                   {isSelected && (
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></div>
                   )}

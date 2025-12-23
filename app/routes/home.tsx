@@ -95,8 +95,16 @@ export default function Home() {
       <header className="bg-white/90 backdrop-blur-xl sticky top-0 z-30 border-b border-slate-200/60 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="bg-white text-slate-800 p-2.5 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-slate-100">
-              <ScissorIcon className="w-5 h-5" />
+            <div className="bg-white text-slate-800 p-1 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-slate-100 relative overflow-hidden w-20 h-20 flex items-center justify-center">
+              {settings?.logoUrl ? (
+                <img
+                  src={settings.logoUrl}
+                  alt="Logo"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <ScissorIcon className="w-6 h-6" />
+              )}
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-lg tracking-tight text-slate-900">

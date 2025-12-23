@@ -13,15 +13,11 @@ export function HistoryModal({ isOpen, onClose }: HistoryModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Fundo desfocado */}
       <div
         className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       ></div>
-
-      {/* Janela do Modal */}
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl relative z-10 overflow-hidden ring-1 ring-slate-100 flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
-        {/* Cabeçalho */}
         <div className="p-6 border-b border-slate-100 bg-slate-50/80 backdrop-blur-md flex justify-between items-center sticky top-0">
           <div>
             <h2 className="text-xl font-bold text-slate-800">
@@ -36,13 +32,10 @@ export function HistoryModal({ isOpen, onClose }: HistoryModalProps) {
               Total
             </span>
             <p className="text-xl font-black text-emerald-600">
-              {/* Calcula o total ali mesmo para exibir no topo */}
               R$ {history.reduce((acc, item) => acc + item.total, 0).toFixed(2)}
             </p>
           </div>
         </div>
-
-        {/* Lista */}
         <div className="flex-1 overflow-y-auto p-6 space-y-3 custom-scrollbar bg-white">
           {loading ? (
             <p className="text-center text-slate-400 py-10">A carregar...</p>
@@ -84,8 +77,6 @@ export function HistoryModal({ isOpen, onClose }: HistoryModalProps) {
             ))
           )}
         </div>
-
-        {/* Rodapé com botão fechar */}
         <div className="p-4 bg-slate-50 border-t border-slate-100 text-right">
           <button
             onClick={onClose}

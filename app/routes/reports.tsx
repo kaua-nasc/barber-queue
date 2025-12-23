@@ -15,14 +15,12 @@ import { useReports } from "~/hooks/use-reports.hook";
 import { Link } from "react-router";
 import type { Route } from "../+types/root";
 
-// Cores para o gráfico de pizza
 const COLORS = ["#059669", "#3b82f6", "#8b5cf6", "#f59e0b", "#ef4444"];
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Relatórios Financeiros" }];
 }
 
-// Ícone de Voltar
 const ArrowLeftIcon = () => (
   <svg
     className="w-5 h-5"
@@ -52,7 +50,6 @@ export default function Reports() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-800 font-sans p-6 lg:p-10">
-      {/* Header com Navegação */}
       <header className="flex items-center gap-4 mb-10 border-b border-slate-200 pb-6">
         <Link
           to="/admin"
@@ -70,7 +67,6 @@ export default function Reports() {
         </div>
       </header>
 
-      {/* KPI Cards (Números Grandes) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
@@ -106,9 +102,7 @@ export default function Reports() {
         </div>
       </div>
 
-      {/* Área dos Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Gráfico 1: Faturamento Mensal */}
         <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
           <h2 className="text-lg font-bold text-slate-800 mb-6">
             Faturamento Mensal
@@ -153,7 +147,6 @@ export default function Reports() {
           </div>
         </div>
 
-        {/* Gráfico 2: Serviços Populares */}
         <div className="bg-white p-8 rounded-4xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
           <h2 className="text-lg font-bold text-slate-800 mb-6">
             Top Serviços
