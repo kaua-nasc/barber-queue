@@ -8,7 +8,7 @@ import { useSettings } from "~/hooks/use-settings.hook";
 import { useEffect, useState } from "react";
 import { SettingsModal } from "~/components/modals/settings-modal.component";
 import { Link, useNavigate } from "react-router";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { auth } from "~/services/firebase";
 import { ServicesModal } from "~/components/modals/services-modal.compoent";
 import { useServices } from "~/hooks/use-services.hook";
@@ -89,7 +89,6 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Admin() {
   const navigate = useNavigate();
-  const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
@@ -111,18 +110,6 @@ export default function Admin() {
     }
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        navigate("/login");
-      } else {
-        setIsAuthChecking(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [navigate]);
-
   const handleLogout = async () => {
     await signOut(auth);
     navigate("/login");
@@ -135,14 +122,6 @@ export default function Admin() {
       open();
     }
   };
-
-  if (isAuthChecking) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-800 font-sans p-6 lg:p-10 selection:bg-slate-200">
