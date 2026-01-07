@@ -1,87 +1,57 @@
-# Welcome to React Router!
+# Barber Queue - Sistema de Gestão de Filas
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Um sistema moderno e em tempo real para gerenciamento de filas de barbearia. Permite que clientes entrem na fila remotamente e acompanhem sua posição, enquanto o barbeiro gerencia o fluxo, serviços e faturamento através de um painel administrativo.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Funcionalidades
 
-## Features
+### Para o Cliente (Público)
+- **Fila em Tempo Real:** Visualização da posição atual e estimativa de tempo de espera.
+- **Auto-Atendimento:** O cliente coloca seu nome e seleciona os serviços desejados.
+- **Status da Barbearia:** Indicador visual de "Aberto/Fechado" baseado no horário ou controle manual.
+- **Informações Úteis:** Visualização dos horários de funcionamento da semana e avisos importantes (ex: "Férias", "Promoções").
+- **Persistência de Sessão:** O cliente não perde o lugar na fila se fechar o navegador.
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+### Painel Administrativo
+- **Gestão de Fila:** Visualizar quem está na cadeira, próximos da fila, finalizar ou remover atendimentos.
+- **Controle Financeiro:** Relatório diário de faturamento e contagem de clientes.
+- **Configurações Dinâmicas:**
+  - **Serviços:** Adicionar/Editar/Remover serviços e preços.
+  - **Horários:** Configurar horário de abertura e fechamento para cada dia da semana.
+  - **Avisos:** Criar banners de alerta (Info, Alerta, Sucesso) visíveis na home.
+  - **Status:** Abrir ou fechar a fila manualmente.
 
-## Getting Started
+## Tecnologias Utilizadas
 
-### Installation
+Este projeto foi construído com foco em performance, experiência do usuário e código limpo.
 
-Install the dependencies:
+- **Frontend:** [React](https://react.dev/) (v19) com [React Router v7](https://reactrouter.com/) para roteamento moderno.
+- **Linguagem:** [TypeScript](https://www.typescriptlang.org/) para tipagem estática e segurança.
+- **Estilização:** [Tailwind CSS](https://tailwindcss.com/) para design responsivo e ágil.
+- **Backend as a Service (BaaS):** [Firebase](https://firebase.google.com/)
+  - **Realtime Database:** Para sincronização instantânea da fila e configurações.
+  - **Authentication:** Para segurança do painel administrativo.
+- **Ícones:** SVG Icons personalizados.
 
-```bash
-npm install
-```
+## Como Rodar o Projeto
 
-### Development
+### Pré-requisitos
+- Node.js (v18 ou superior)
+- Conta no Firebase
 
-Start the development server with HMR:
+### Passo a Passo
 
-```bash
-npm run dev
-```
+1. **Clone o repositório**
+   ```bash
+   git clone https://github.com/kaua-nasc/barber-queue.git
+   cd barber-queue
+2. **Configurar Variáveis de Ambiente**
 
-Your application will be available at `http://localhost:5173`.
+   Crie um arquivo .env na raiz do projeto e adicione suas credenciais do Firebase Realtime Database.
+4. **Instalar Dependências e Iniciar**
 
-## Building for Production
+   ```bash
+   # Instala as dependências usando Bun
+   bun install
 
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+   # Inicia o servidor de desenvolvimento
+   bun dev
