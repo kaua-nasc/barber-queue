@@ -15,8 +15,8 @@ export function JoinQueuePrompt({
   availableServices,
 }: JoinQueuePromptProps) {
   const [name, setName] = useState("");
-
   const [selectedServices, setSelectedServices] = useState<ServiceItem[]>([]);
+  const [error, setError] = useState("");
 
   const toggleService = (service: ServiceItem) => {
     const isAlreadySelected = selectedServices.some((s) => s.id === service.id);
@@ -29,7 +29,13 @@ export function JoinQueuePrompt({
   };
 
   const handleConfirm = () => {
-    if (name.trim() && selectedServices.length > 0) {
+    setError("");
+
+    if (!name.trim() || name.length < 3) {
+      return;
+    }
+
+    if (selectedServices.length > 0) {
       onJoin(
         name,
         selectedServices.map((s) => s.name)
@@ -42,7 +48,7 @@ export function JoinQueuePrompt({
     0
   );
 
-  const isValid = name.length > 2 && selectedServices.length > 0;
+  const isValidBasic = name.length > 2 && selectedServices.length > 0;
 
   return (
     <div className="flex flex-col items-center justify-center h-full text-center p-6 md:p-8 overflow-y-auto custom-scrollbar relative">
@@ -56,6 +62,7 @@ export function JoinQueuePrompt({
       <p className="text-slate-400 max-w-xs mx-auto mb-8 text-sm font-medium">
         Informe seu nome e escolha os serviços.
       </p>
+
       <div className="w-full max-w-sm mb-6 text-left">
         <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
           Seu Nome
@@ -65,16 +72,26 @@ export function JoinQueuePrompt({
             type="text"
             placeholder="Ex: João Silva"
             value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-5 py-4 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all font-semibold text-slate-800 placeholder-slate-300 shadow-sm"
+            onChange={(e) => {
+              setName(e.target.value);
+              setError("");
+            }}
+            className={`w-full px-5 py-4 bg-white border rounded-xl focus:ring-2 outline-none transition-all font-semibold text-slate-800 placeholder-slate-300 shadow-sm
+                    ${
+                      error
+                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                        : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
+                    }
+                `}
           />
-          {name.length > 0 && name.length < 3 && (
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-red-400 font-bold">
-              Muito curto
+          {error && (
+            <span className="absolute right-0 -bottom-5 text-[10px] text-red-500 font-bold animate-pulse">
+              {error}
             </span>
           )}
         </div>
       </div>
+
       <div className="w-full max-w-sm mb-8 text-left">
         <div className="flex justify-between items-end mb-3 ml-1">
           <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -86,22 +103,16 @@ export function JoinQueuePrompt({
             </span>
           )}
         </div>
-
         <div className="flex flex-wrap gap-2.5">
-          {availableServices.length === 0 ? (
-            <div className="w-full text-center p-4 border border-dashed border-slate-200 rounded-xl text-slate-400 text-sm">
-              Nenhum serviço cadastrado pelo barbeiro.
-            </div>
-          ) : (
-            availableServices.map((service) => {
-              const isSelected = selectedServices.some(
-                (s) => s.id === service.id
-              );
-              return (
-                <button
-                  key={service.id}
-                  onClick={() => toggleService(service)}
-                  className={`
+          {availableServices.map((service) => {
+            const isSelected = selectedServices.some(
+              (s) => s.id === service.id
+            );
+            return (
+              <button
+                key={service.id}
+                onClick={() => toggleService(service)}
+                className={`
                         group relative flex items-center gap-2 pl-4 pr-3 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 border shadow-sm
                         ${
                           isSelected
@@ -109,39 +120,37 @@ export function JoinQueuePrompt({
                             : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
                         }
                     `}
+              >
+                <span>{service.name}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.5 rounded-md ${
+                    isSelected
+                      ? "bg-slate-700 text-slate-200"
+                      : "bg-slate-100 text-slate-400 group-hover:bg-slate-200"
+                  }`}
                 >
-                  <span>{service.name}</span>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-md ${
-                      isSelected
-                        ? "bg-slate-700 text-slate-200"
-                        : "bg-slate-100 text-slate-400 group-hover:bg-slate-200"
-                    }`}
-                  >
-                    R$ {service.price}
-                  </span>
-
-                  {isSelected && (
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></div>
-                  )}
-                </button>
-              );
-            })
-          )}
+                  R$ {service.price}
+                </span>
+                {isSelected && (
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></div>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
 
       <button
         onClick={handleConfirm}
-        disabled={!isValid}
+        disabled={!isValidBasic}
         className={`w-full max-w-xs py-4 font-bold rounded-xl shadow-xl transition-all flex items-center justify-center gap-3 ${
-          isValid
+          isValidBasic
             ? "bg-emerald-600 text-white shadow-emerald-600/20 hover:bg-emerald-500 hover:-translate-y-1 cursor-pointer"
             : "bg-slate-100 text-slate-300 cursor-not-allowed shadow-none border border-slate-200"
         }`}
       >
         <UserCheckIcon className="w-5 h-5" />
-        {isValid ? "Confirmar Entrada" : "Preencha os dados"}
+        Confirmar Entrada
       </button>
 
       <div className="mt-6 flex items-center gap-2 text-xs text-slate-400 font-medium bg-slate-50 px-3 py-1.5 rounded-full">

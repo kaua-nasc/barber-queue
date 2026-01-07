@@ -15,6 +15,8 @@ import { useServices } from "~/hooks/use-services.hook";
 import { useRevenue } from "~/hooks/use-revenue.hook";
 import { HistoryModal } from "~/components/modals/history-modal.component";
 import { FinishModal } from "~/components/modals/finish-modal.component";
+import { HoursModal } from "~/components/modals/hours-modal.component";
+import { useSchedule } from "~/hooks/use-schedule.hook";
 
 const PencilIcon = ({ className }: { className?: string }) => (
   <svg
@@ -28,6 +30,22 @@ const PencilIcon = ({ className }: { className?: string }) => (
       strokeLinejoin="round"
       strokeWidth="2"
       d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+    />
+  </svg>
+);
+
+const CalendarIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
     />
   </svg>
 );
@@ -91,6 +109,7 @@ export default function Admin() {
   const navigate = useNavigate();
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isHoursOpen, setIsHoursOpen] = useState(false);
   const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
 
   const { queue, finishClient, removeClient } = useQueue();
@@ -98,6 +117,7 @@ export default function Admin() {
   const { settings, updateSettings } = useSettings();
   const { services } = useServices();
   const { dailyTotal, clientCount } = useRevenue();
+  const { updateSchedule } = useSchedule();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const currentClient = queue[0];
@@ -140,6 +160,11 @@ export default function Admin() {
       <ServicesModal
         isOpen={isServicesOpen}
         onClose={() => setIsServicesOpen(false)}
+      />
+      <HoursModal 
+        isOpen={isHoursOpen} 
+        onClose={() => setIsHoursOpen(false)}
+        onSave={(schedule) => updateSchedule(schedule)}
       />
       {currentClient && (
         <FinishModal
@@ -184,12 +209,20 @@ export default function Admin() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4">
+          <button
+            onClick={() => setIsHoursOpen(true)}
+            className="text-xs font-bold text-slate-400 hover:text-emerald-600 flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white transition-all"
+          >
+            <CalendarIcon className="w-3.5 h-3.5" />
+            Horários
+          </button>
+          <div className="w-px h-6 bg-slate-200 hidden md:block"></div>
           <button
             onClick={() => setIsServicesOpen(true)}
-            className="text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:underline flex items-center gap-1 mt-1"
+            className="text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:underline flex items-center gap-1"
           >
-            Gerenciar Preços e Serviços
+            Gerenciar Preços
           </button>
           <Link
             to="/reports"
