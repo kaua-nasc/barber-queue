@@ -17,6 +17,9 @@ import { HistoryModal } from "~/components/modals/history-modal.component";
 import { FinishModal } from "~/components/modals/finish-modal.component";
 import { HoursModal } from "~/components/modals/hours-modal.component";
 import { useSchedule } from "~/hooks/use-schedule.hook";
+import { useNotice } from "~/hooks/use-notice.hook";
+import { NoticeModal } from "~/components/modals/notice-modal.component";
+import { MegaphoneIcon } from "~/components/icons/megaphone-icon.component";
 
 const PencilIcon = ({ className }: { className?: string }) => (
   <svg
@@ -98,6 +101,16 @@ const ChartIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const baseButtonStyle = "group flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 border border-transparent";
+const defaultButtonStyle = `${baseButtonStyle} text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-sm hover:border-slate-100`;
+const activeNoticeStyle = `${baseButtonStyle} bg-amber-50 text-amber-600 border-amber-100 shadow-sm`;
+
+const TagIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+  </svg>
+);
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Painel Admin | Lemes Barbearia" },
@@ -111,6 +124,8 @@ export default function Admin() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isHoursOpen, setIsHoursOpen] = useState(false);
   const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
+  const [isNoticeOpen, setIsNoticeOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const { queue, finishClient, removeClient } = useQueue();
   const { status, close, open } = useStatus();
@@ -118,7 +133,7 @@ export default function Admin() {
   const { services } = useServices();
   const { dailyTotal, clientCount } = useRevenue();
   const { updateSchedule } = useSchedule();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const { notice, updateNotice } = useNotice();
 
   const currentClient = queue[0];
   const nextInLine = queue.slice(1);
@@ -160,6 +175,12 @@ export default function Admin() {
       <ServicesModal
         isOpen={isServicesOpen}
         onClose={() => setIsServicesOpen(false)}
+      />
+      <NoticeModal 
+        isOpen={isNoticeOpen}
+        onClose={() => setIsNoticeOpen(false)}
+        onSave={updateNotice}
+        currentNotice={notice}
       />
       <HoursModal 
         isOpen={isHoursOpen} 
@@ -209,28 +230,53 @@ export default function Admin() {
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Botão Horários */}
           <button
             onClick={() => setIsHoursOpen(true)}
-            className="text-xs font-bold text-slate-400 hover:text-emerald-600 flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white transition-all"
+            className={defaultButtonStyle}
           >
-            <CalendarIcon className="w-3.5 h-3.5" />
+            <CalendarIcon className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 transition-colors" />
             Horários
           </button>
-          <div className="w-px h-6 bg-slate-200 hidden md:block"></div>
+
+          {/* Botão Preços (Padronizado) */}
           <button
             onClick={() => setIsServicesOpen(true)}
-            className="text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:underline flex items-center gap-1"
+            className={defaultButtonStyle}
           >
+            <TagIcon className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 transition-colors" />
             Gerenciar Preços
           </button>
+
+          {/* Link Relatórios */}
           <Link
             to="/reports"
-            className="text-xs font-bold text-slate-400 hover:text-slate-600 flex items-center gap-1"
+            className={defaultButtonStyle}
           >
-            <ChartIcon className="w-3 h-3" />
+            <ChartIcon className="w-4 h-4 text-slate-400 group-hover:text-purple-500 transition-colors" />
             Relatórios
           </Link>
+
+          {/* Botão Avisos (Com estado ativo diferenciado) */}
+          <button
+            onClick={() => setIsNoticeOpen(true)}
+            className={notice.isVisible ? activeNoticeStyle : defaultButtonStyle}
+          >
+            <MegaphoneIcon className={`w-4 h-4 ${notice.isVisible ? 'text-amber-500' : 'text-slate-400 group-hover:text-amber-500'} transition-colors`} />
+            Avisos 
+            {notice.isVisible && (
+              <span className="flex h-2 w-2 relative ml-1">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+              </span>
+            )}
+          </button>
+
+          {/* Divisória */}
+          <div className="w-px h-8 bg-slate-200 hidden md:block mx-2"></div>
+
+          {/* Toggle Status (Mantido o destaque visual por ser a ação principal) */}
           <button
             onClick={toggleStatus}
             className={`group flex items-center gap-3 px-1 py-1 pr-4 rounded-full border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-50 shadow-sm ${
@@ -240,20 +286,20 @@ export default function Admin() {
             }`}
           >
             <div
-              className={`w-12 h-7 rounded-full relative transition-colors duration-300 flex items-center shadow-inner ${
+              className={`w-10 h-6 rounded-full relative transition-colors duration-300 flex items-center shadow-inner ${
                 status === Status.open ? "bg-emerald-500" : "bg-rose-500"
               }`}
             >
               <div
-                className={`absolute w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ${
-                  status === Status.open ? "translate-x-6" : "translate-x-1"
+                className={`absolute w-4 h-4 bg-white rounded-full shadow-sm transform transition-transform duration-300 ${
+                  status === Status.open ? "translate-x-5" : "translate-x-1"
                 }`}
               />
             </div>
 
             <div className="flex flex-col items-start">
               <span
-                className={`text-xs font-bold uppercase tracking-wider transition-colors ${
+                className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${
                   status === Status.open ? "text-emerald-600" : "text-rose-600"
                 }`}
               >
@@ -261,12 +307,14 @@ export default function Admin() {
               </span>
             </div>
           </button>
+
+          {/* Botão Sair */}
           <button
             onClick={handleLogout}
-            className="bg-white p-3 rounded-full border border-slate-200 text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-all shadow-sm"
+            className="bg-white p-2.5 rounded-xl border border-slate-200 text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all shadow-sm ml-2"
             title="Sair do sistema"
           >
-            <LogoutIcon className="w-5 h-5" />
+            <LogoutIcon className="w-4 h-4" />
           </button>
         </div>
       </header>

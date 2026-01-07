@@ -10,7 +10,8 @@ import { Status } from "~/interfaces/status.interface";
 import { useStatus } from "~/hooks/use-status.hook";
 import { useSettings } from "~/hooks/use-settings.hook";
 import { useServices } from "~/hooks/use-services.hook";
-import { BusinessHoursCard } from "~/components/business-hours-card.component"; // Importe o componente
+import { BusinessHoursCard } from "~/components/business-hours-card.component";
+import { NoticeBanner } from "~/components/notice-banner.component";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -152,6 +153,7 @@ export default function Home() {
         {/* Coluna 3: Informações e Horários */}
         <div className="lg:col-span-3 order-3 lg:order-3 flex flex-col gap-6 lg:sticky lg:top-28">
           
+          <NoticeBanner />
           <BusinessHoursCard />
 
           <div className="bg-white p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex-1 flex flex-col justify-center relative overflow-hidden">
